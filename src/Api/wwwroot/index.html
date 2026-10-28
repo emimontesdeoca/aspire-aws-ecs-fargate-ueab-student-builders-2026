@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cacao Store</title>
+  <style>
+    :root { font-family: "Segoe UI", system-ui, sans-serif; color: #2b1d12; background: #faf6f1; }
+    body { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { color: #5b3a1e; margin-bottom: .2rem; }
+    .sub { color: #8a6a4d; margin-top: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .card { background: #fff; border: 1px solid #e6d9c9; border-radius: 10px; padding: 1rem; }
+    .card h3 { margin: 0 0 .3rem; font-size: 1.05rem; }
+    .origin { color: #8a6a4d; font-size: .9rem; }
+    .price { font-weight: 600; margin: .5rem 0; }
+    button { background: #5b3a1e; color: #fff; border: 0; border-radius: 6px; padding: .5rem .9rem; cursor: pointer; }
+    button:hover { background: #7a4f2a; }
+    input { padding: .45rem .6rem; border: 1px solid #cdb9a3; border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; margin-top: .5rem; background: #fff; }
+    th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid #efe4d6; font-size: .95rem; }
+    th { background: #f1e7da; }
+    .pending { color: #b26a00; font-weight: 600; }
+    .processed { color: #1b7f3b; font-weight: 600; }
+    .muted { color: #8a6a4d; font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <h1>🍫 Cacao Store</h1>
+  <p class="sub">Ecuadorian cacao · an Aspire demo · served by the API itself</p>
+
+  <p>Customer: <input id="customer" value="Emiliano" /> <span class="muted">(stored with the order)</span></p>
+
+  <h2>Products</h2>
+  <div id="products" class="grid"></div>
+
+  <h2>Orders <span class="muted">(the .NET worker processes them)</span></h2>
+  <table>
+    <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Customer</th><th>Status</th><th>Processed</th></tr></thead>
+    <tbody id="orders"></tbody>
+  </table>
+
+  <script>
+    // Same origin as the API, so plain relative URLs work on localhost and behind the AWS endpoint.
+    async function loadProducts() {
+      const r = await fetch("/products");
+      const products = await r.json();
+      document.getElementById("products").innerHTML = products.map(p => `
+        <div class="card">
+          <h3>${p.name}</h3>
+          <div class="origin">${p.origin}</div>
+          <div class="price">$${Number(p.priceUsd).toFixed(2)}</div>
+          <button onclick="order(${p.id})">Order 1</button>
+        </div>`).join("");
+    }
+
+    async function loadOrders() {
+      const r = await fetch("/orders");
+      const orders = await r.json();
+      document.getElementById("orders").innerHTML = orders.map(o => `
+        <tr>
+          <td>${o.id}</td><td>${o.product}</td><td>${o.quantity}</td><td>${o.customer}</td>
+          <td class="${o.status}">${o.status}</td>
+          <td>${o.processedAt ? new Date(o.processedAt).toLocaleTimeString() : "—"}</td>
+        </tr>`).join("");
+    }
+
+    async function order(productId) {
+      const customer = document.getElementById("customer").value || "anonymous";
+      await fetch("/orders", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ productId, quantity: 1, customer }),
+      });
+      await loadOrders();
+    }
+
+    loadProducts();
+    loadOrders();
+    setInterval(loadOrders, 2000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+
+# Aspire
+.aspire/
+aspire-output/
+
+# Aspire publish output
+aspire-output/
+
+# Secrets / local config
+.env
+*.local.*
+
+# MARP output
+slides/*.html
+slides/*.pdf
+slides/*.pptx
+
+# Node (CDK CLI, marp-cli)
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
