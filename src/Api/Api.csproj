@@ -6,11 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.StackExchange.Redis" Version="13.6.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Data\products.json" />
-    <EmbeddedResource Include="Data\products.json" LogicalName="products.json" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="Microsoft.OpenApi" Version="2.7.5" />
   </ItemGroup>
 
 </Project>

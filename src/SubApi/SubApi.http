@@ -1,0 +1,4 @@
+@baseUrl = http://localhost:8081
+
+### Return a plain-text value read from PostgreSQL
+GET {{baseUrl}}/database-info

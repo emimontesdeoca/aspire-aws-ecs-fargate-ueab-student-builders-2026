@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.Hosting;
 /// <summary>
 /// One line in each service (<c>builder.AddServiceDefaults()</c>) gives you:
 /// OpenTelemetry exported over OTLP, health checks, service discovery and HTTP resilience.
-/// Works for web apps (Api) and generic hosts (Worker).
+/// Shared by the API and Sub API.
 /// </summary>
 public static class Extensions
 {
@@ -45,10 +45,10 @@ public static class Extensions
                 .AddAspNetCoreInstrumentation()
                 .AddHttpClientInstrumentation()
                 .AddRuntimeInstrumentation()
-                .AddMeter("CacaoStore.*"))                  // CacaoStore.Api, CacaoStore.Worker
+                .AddMeter("CacaoStore.*"))
             .WithTracing(tracing => tracing
                 .AddSource(builder.Environment.ApplicationName)
-                .AddSource("CacaoStore.*")                  // our own spans: CreateOrder, ProcessOrder
+                .AddSource("CacaoStore.*")
                 .AddAspNetCoreInstrumentation(o => o.Filter = ctx => !ctx.Request.Path.StartsWithSegments("/health"))
                 .AddHttpClientInstrumentation());
 
