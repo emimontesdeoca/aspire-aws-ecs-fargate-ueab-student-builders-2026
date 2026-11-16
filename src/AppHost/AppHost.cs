@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddDockerComposeEnvironment("compose");
+builder.AddDockerComposeEnvironment("env");
 var database = builder.AddPostgres("postgres").AddDatabase("cacao");
 var cache = builder.AddRedis("cache");
 

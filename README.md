@@ -45,22 +45,22 @@ No tables, migrations, or seed data are created.
 
 ## Generate Docker Compose
 
-From `src`, publish the Aspire app model:
+From the repository root, publish the Aspire app model:
 
 ```powershell
-aspire publish
+aspire publish --apphost .\src\AppHost\AppHost.csproj -o .\
 ```
 
-Aspire generates the Compose file and environment template under `AppHost/aspire-output`. That folder is ignored by Git because the files are generated output. To run the generated Compose deployment on the **local** Docker host:
+Aspire generates `docker-compose.yaml` in the repository root. To run the generated Compose deployment on the **local** Docker host:
 
 ```powershell
-aspire deploy
+aspire deploy --apphost .\src\AppHost\AppHost.csproj -o .\
 ```
 
 Stop it with:
 
 ```powershell
-aspire destroy
+aspire destroy --apphost .\src\AppHost\AppHost.csproj -o .\
 ```
 
 The AppHost uses `Aspire.Hosting.Docker`; no AWS package or AWS credentials are required for local development or Compose generation.
@@ -83,6 +83,8 @@ cd slides
 npx @marp-team/marp-cli deck.md -o deck.html
 npx @marp-team/marp-cli deck.md --pdf -o deck.pdf
 ```
+
+The slides are also published at [GitHub Pages](https://emimontesdeoca.github.io/aspire-docker-ueab-student-builders-2026/). The site is rebuilt automatically when `slides/` changes on `master`.
 
 ## References
 
